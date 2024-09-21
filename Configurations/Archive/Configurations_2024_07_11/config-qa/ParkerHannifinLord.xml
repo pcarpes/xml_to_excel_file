@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<standardizer xmlns="https://si.team/schemas">
+    <organization>ParkerHannifinLord</organization>
+    <source>
+        <tenant>
+            <key>parker-lord</key>
+            <auth>
+                <authType>DSS_OAUTH</authType>
+                <secretId>sharedHelo2DssCreds</secretId>
+            </auth>
+        </tenant>
+    </source>
+    <channels>
+        <channel id="8ca0c43d-6785-4013-98d7-e53827084281" name="ShipmentsExactMatch-Passthrough"
+                 source="Expeditors:ShipmentExactMatchAPI" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>kavi2-all-in-one</integrationArtifactId>
+                <annotation>
+                    <name>api</name>
+                    <value>/tracking/v2/shipments/exactmatch</value>
+                </annotation>
+            </selectPayloads>
+            <passthrough sim="ShipmentsExactMatch"/>
+        </channel>
+        <channel id="41fffe8e-63b0-4b83-bd69-940aad758922" name="ContainersExactMatch-Passthrough"
+                 source="Expeditors:ContainerExactMatchAPI" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>kavi2-all-in-one</integrationArtifactId>
+                <annotation>
+                    <name>api</name>
+                    <value>/tracking/v2/containers/exactmatch</value>
+                </annotation>
+            </selectPayloads>
+            <passthrough sim="ContainersExactMatch"/>
+        </channel>
+        <channel id="47aefdc8-0dc8-4384-9bbf-0c9f82e2c3b7" name="Emailed_RAFT_ASN"
+                 source="ParkerHannifinLord:InvoiceReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="STARTS_WITH">
+                    <name>subject</name>
+                    <value>PH | RAFT | InvoiceReport</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.ParkerHannifinLordInvoiceRptToTransitDocXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.ParkerHannifinLordInvoiceRptToPOFulfillmentXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.ParkerHannifinLordInvoiceRptToTagXf
+            </transformerClass>
+        </channel>
+        <channel id="33fe2635-6890-458d-b6f8-3bf4d59e0847" name="CHR_Shipment_Tab"
+                 source="CHRobinson:ShipmentTrackingReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="CONTAINS">
+                    <name>subject</name>
+                    <value>PH | CHR | ShipmentTabReport</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.CHRobinsonShptTrkRptToTransitDocXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.CHRobinsonShptTrkRptToTDReferenceXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.CHRobinsonShptTrkRptToTDItineraryXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.CHRobinsonShptTrkRptToMilestoneXf
+            </transformerClass>
+        </channel>
+    </channels>
+</standardizer>

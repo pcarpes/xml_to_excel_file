@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<standardizer xmlns="https://si.team/schemas">
+    <organization>OwensMinor</organization>
+    <source>
+        <tenant>
+            <key>oandm</key>
+            <auth>
+                <authType>DSS_OAUTH</authType>
+                <secretId>sharedHelo2DssCreds</secretId>
+            </auth>
+        </tenant>
+    </source>
+    <channels>
+        <channel id="cc884c66-1ef6-4dd4-8294-6ff42bac8f17" name="ShipmentsExactMatch-Passthrough"
+                 source="Expeditors:ShipmentExactMatchAPI" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>kavi2-all-in-one</integrationArtifactId>
+                <annotation>
+                    <name>api</name>
+                    <value>/tracking/v2/shipments/exactmatch</value>
+                </annotation>
+            </selectPayloads>
+            <passthrough sim="ShipmentsExactMatch"/>
+        </channel>
+        <channel id="014f969c-106c-4bdd-a9d6-95aeb5a01962" name="ContainersExactMatch-Passthrough"
+                 source="Expeditors:ContainerExactMatchAPI" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>kavi2-all-in-one</integrationArtifactId>
+                <annotation>
+                    <name>api</name>
+                    <value>/tracking/v2/containers/exactmatch</value>
+                </annotation>
+            </selectPayloads>
+            <passthrough sim="ContainersExactMatch"/>
+        </channel>
+        <channel id="d1b3a8dd-fbd0-44c1-ad2d-0ded2e23e0a9" name="ContainersOmExactMatch-Passthrough"
+                 source="Expeditors:OMContainerExactMatchAPI" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>kavi2-all-in-one</integrationArtifactId>
+                <annotation>
+                    <name>api</name>
+                    <value>/tracking/v2/containers/om/exactmatch</value>
+                </annotation>
+            </selectPayloads>
+            <passthrough sim="ContainersOmExactMatch"/>
+        </channel>
+        <channel id="b07f421c-10ff-4aa9-bec2-306ddcb626b3" name="EmailedEXPDReportToPurchaseOrder_OM"
+                 source="Expeditors:OrderReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="STARTS_WITH">
+                    <name>subject</name>
+                    <value>EXPD | Orders | OwensMinor</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.EXPDOrderRptToPurchaseOrderXf
+            </transformerClass>
+        </channel>
+        <channel id="87dd84a8-a9ea-4635-9d84-a8a9ea163523" name="EmailedEXPDReportToPurchaseOrder_OMHalyard"
+                 source="Expeditors:OrderReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="STARTS_WITH">
+                    <name>subject</name>
+                    <value>EXPD | Orders | OMHalyard</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.EXPDOrderRptToPurchaseOrderXf
+            </transformerClass>
+        </channel>
+        <channel id="cec31f51-108f-4c9d-831f-51108f7c9d7a" name="EmailedSeaboardMarineTransformers"
+                 source="SeaboardMarine:ShipmentTrackingReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="ENDS_WITH">
+                    <name>subject</name>
+                    <value>Visibility Project - Seaboard</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.SeaboardMarineShptTrkRptV2ToTransitDocXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.SeaboardMarineShptTrkRptV2ToTDReferenceXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.SeaboardMarineShptTrkRptV2ToTDItineraryXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.SeaboardMarineShptTrkRptV2ToMilestoneXf
+            </transformerClass>
+        </channel>
+        <channel id="ef4991ac-1d66-4c57-8991-ac1d66bc5756" name="EmailedTopOceanTransformers"
+                 source="TopOcean:ShipmentTrackingReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="CONTAINS">
+                    <name>subject</name>
+                    <value>OWENS_DAILY REPORT V2 Tracking</value>
+                </annotation>
+            </selectPayloads>
+            <parserHints>
+                <tableRowOffset>7</tableRowOffset>
+            </parserHints>
+            <transformerClass>
+                team.si.stan.core.transformers.TopOceanShptTrkRptV2ToTransitDocXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.TopOceanShptTrkRptV2ToTDReferenceXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.TopOceanShptTrkRptV2ToTDItineraryXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.TopOceanShptTrkRptV2ToMilestoneXf
+            </transformerClass>
+        </channel>
+        <channel id="dcb4c2e5-76d3-46f1-9f95-0ad5f5f5cdcc" name="EmailedKWEArrivalReportTransformers"
+                 source="Kintetsu:ShipmentTrackingReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="CONTAINS">
+                    <name>subject</name>
+                    <value>【KWE】Daily Arrival_Report</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.KintetsuShptTrkRptToTransitDocXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.KintetsuShptTrkRptToTDReferenceXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.KintetsuShptTrkRptToTDItineraryXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.KintetsuShptTrkRptToMilestoneXf
+            </transformerClass>
+        </channel>
+        <channel id="71ce970c-0ac3-442a-b6bd-40f98314db65" name="OwensMinor_L&amp;MImportReport"
+                 source="LMBrokers:ImportReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="CONTAINS">
+                    <name>subject</name>
+                    <value>Import / Export Reports Attached:</value>
+                </annotation>
+                <annotation type="STARTS_WITH">
+                    <name>attachment</name>
+                    <value>O&amp;MReportImports</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersImportRptToTransitDocXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersImportRptToTDReferenceXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersImportRptToTDItineraryXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersImportRptToMilestoneXf
+            </transformerClass>
+        </channel>
+        <channel id="18bf7afb-46b8-47e4-a456-55f47a572c61" name="OwensMinor_L&amp;MExportReport"
+                 source="LMBrokers:ExportReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="CONTAINS">
+                    <name>subject</name>
+                    <value>Import / Export Reports Attached:</value>
+                </annotation>
+                <annotation type="STARTS_WITH">
+                    <name>attachment</name>
+                    <value>O&amp;MReportExports</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersExportRptToTransitDocXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersExportRptToTDReferenceXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersExportRptToTDItineraryXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersExportRptToMilestoneXf
+            </transformerClass>
+            <transformerClass>
+                team.si.stan.core.transformers.LMBrokersExportRptOwensMinorToTagXf
+            </transformerClass>
+        </channel>
+        <channel id="e2f13625-b754-4134-9ac1-81ad3f87be6c" name="OwensMinor_LoadConfigReport"
+                 source="OwensMinor:LoadConfigReport" incremental="false" secondary="false">
+            <selectPayloads>
+                <integrationArtifactId>email-azure-plugin</integrationArtifactId>
+                <annotation type="STARTS_WITH">
+                    <name>subject</name>
+                    <value>Helo | OwensMinor | LoadConfigReport</value>
+                </annotation>
+            </selectPayloads>
+            <transformerClass>
+                team.si.stan.core.transformers.OwensMinorLoadConfigRptToTagXf
+            </transformerClass>
+        </channel>
+    </channels>
+</standardizer>

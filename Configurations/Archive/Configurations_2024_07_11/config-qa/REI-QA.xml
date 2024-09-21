@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<standardizer xmlns="https://si.team/schemas">
+    <organization>REI</organization>
+    <source>
+        <tenant>
+            <key>rei-qa</key>
+            <auth>
+                <authType>DSS_OAUTH</authType>
+                <secretId>sharedHelo2DssCreds</secretId>
+            </auth>
+        </tenant>
+    </source>
+    <channels>
+        <channel id="7fed47e1-6e58-4df3-bb00-0e9e733b7892" name="DHL_API" source="DHL:ShipmentTrackingAPI"
+                 incremental="true" secondary="true">
+            <selectPayloads>
+                <integrationArtifactId>dhl-rest-plugin</integrationArtifactId>
+            </selectPayloads>
+            <passthrough sim="DHL"/>
+        </channel>
+    </channels>
+</standardizer>

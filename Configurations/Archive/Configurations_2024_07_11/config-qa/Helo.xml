@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<standardizer xmlns="https://si.team/schemas">
+    <organization>Helo</organization>
+    <source>
+        <tenant>
+            <key>helo-qa</key>
+            <auth>
+                <authType>DSS_OAUTH</authType>
+                <secretId>sharedHelo2DssCreds</secretId>
+            </auth>
+        </tenant>
+    </source>
+    <channels>
+        <channel id="fdf6fb8c-005d-44b1-898e-734208914857" name="HeloOpenTrack" source="OpenTrack:OpenTrack"
+                 incremental="false" secondary="true">
+            <selectPayloads>
+                <integrationArtifactId>opentrack-rest-plugin</integrationArtifactId>
+            </selectPayloads>
+            <passthrough sim="OpenTrack"/>
+        </channel>
+        <channel id="79a1acbb-0860-402a-b7d6-0e0532be8e3c" name="HeloPortcast" source="Portcast:Portcast"
+                 incremental="false" secondary="true">
+            <selectPayloads>
+                <integrationArtifactId>portcast-rest-plugin</integrationArtifactId>
+            </selectPayloads>
+            <passthrough sim="Portcast"/>
+        </channel>
+    </channels>
+</standardizer>
